@@ -10,15 +10,14 @@
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-    <%- include('../partials/search.ejs') %>
-    <div class="container">
-        <%- include('../partials/header.ejs') %>
-        <main class="main">
-            <%- body %>
-        </main>
-        <%- include('../partials/footer.ejs') %>
-    </div>
 
-    <script type="text/javascript" defer src="/js/script.js"></script>
+<div class="container">
+    <%- include('../partials/header_admin.ejs') %>
+    <main class="main">
+        <%- body %>
+    </main>
+    <%- include('../partials/footer.ejs') %>
+</div>
+
 </body>
 </html>

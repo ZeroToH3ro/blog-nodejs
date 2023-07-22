@@ -6,7 +6,7 @@ router.get('', async (req, res) => {
     const locals = {
         title: 'Nodejs Blog',
         description: 'Simple blog create with nodejs, express, mongo'
-    }
+    };
 
     try {
         let page = req.query.page || 1;
@@ -51,7 +51,6 @@ router.post('/search', async (req, res) => {
         title: 'Nodejs Blog',
         description: 'Simple blog create with nodejs, express, mongo'
     };
-
     try {
         let searchTerm = req.body.searchTerm;
         const searchNoSpecialChar = searchTerm.replace(/[^a-zA-Z0-9]/g, "");
