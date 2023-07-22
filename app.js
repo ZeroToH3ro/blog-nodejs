@@ -17,8 +17,7 @@ app.use(session({
     saveUninitialized: true,
     store: MongoStore.create({
         mongoUrl: process.env.MONGODB_URI
-    }),
-    cookie: { maxAge: new Date ( Date.now() + (3600000) ) }
+    })
 }));
 //Get data from post method
 app.use(express.urlencoded({ extended: true }));

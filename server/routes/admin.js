@@ -5,6 +5,23 @@ const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const adminLayout = '../views/layouts/admin';
+const jwtSecret = process.env.JWT_SECRET;
+
+const authMiddleware = (req, res, next) => {
+    const token = req.cookies.token;
+
+    if(!token){
+        res.status(401).json({message: 'Unknown Authorize'});
+    }
+
+    try {
+        const decoded = jwt.verify(token, jwtSecret);
+        req.userId = decoded.userId;
+        next();
+    } catch(error) {
+        res.status(401).json( { message: 'Unauthorized'} );
+    }
+}
 
 router.get('/admin', async(req, res) => {
     try {
@@ -27,15 +44,43 @@ router.post('/admin', async(req, res) => {
         };
 
         const {username, password} = req.body;
-        if(req.body.username == 'admin' && req.body.password == '12345'){
-            res.send('you are logged in');
-        } else {
-            res.send('username or password is incorrect');
+        const user = await User.findOne({username});
+
+        if(!user){
+            return res.status(401).json({message: 'Invalid Credentials'});
         }
+
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+        if(!isPasswordValid){
+            return res.status(401).json({message: 'Invalid Credentials'});
+        }
+
+        const token = jwt.sign({userId: user._id}, jwtSecret);
+        res.cookie('token', token, {httpOnly: true});
+        res.redirect('/dashboard');
     } catch (e) {
         console.log(e);
     }
 });
+
+router.get('/dashboard', authMiddleware, async (req, res) => {
+    try {
+        const locals = {
+            title: 'Dashboard',
+            description: 'Simple Blog created with NodeJs, Express & MongoDb.'
+        }
+
+        const data = await Post.find();
+        res.render('admin/dashboard', {
+            locals,
+            data,
+            layout: adminLayout
+        });
+
+    } catch (error) {
+        console.log(error);
+    }
+})
 
 router.post('/register', async(req, res) => {
     try {
