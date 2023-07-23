@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const adminLayout = '../views/layouts/admin';
 const jwtSecret = process.env.JWT_SECRET;
-
+//hello world
 const authMiddleware = (req, res, next) => {
     const token = req.cookies.token;
 
